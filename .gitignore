@@ -56,3 +56,6 @@ nunit-*.xml
 #Secrets
 appsettings.json
 appsettings.*.json
+
+#Jetbrains
+.idea
