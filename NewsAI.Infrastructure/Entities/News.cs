@@ -12,9 +12,17 @@ public class News
 
     public string ImageUrl { get; set; } = null!;
     
-    public DateTime PublishDate { get; set; }
+    public DateTime CreatedAt { get; set; }
     
-    public DateTime CreatedDate { get; set; }
+    public DateTime? UpdatedAt { get; set; }
     
-    public DateTime? UpdatedDate { get; set; }
+    public Guid CategoryId { get; set; }
+    
+    //Relations
+
+    public virtual HotNews HotNews { get; set; } = null!;
+    
+    public virtual SavedNews SavedNews { get; set; } = null!;
+
+    public virtual Category Category { get; set; } = null!;
 }
