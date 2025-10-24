@@ -20,8 +20,12 @@ public class User
     
     public bool IsActive { get; set; }
     
+    public DateTime CreatedAt { get; set; }
+    
+    public DateTime UpdatedAt { get; set; }
+    
     //Relations
 
-    public virtual SavedNews SavedNews { get; set; } = null!;
+    public virtual ICollection<SavedNews> SavedNews { get; set; } = new List<SavedNews>();
 }
 
