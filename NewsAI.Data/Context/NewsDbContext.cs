@@ -51,7 +51,7 @@ public class NewsDbContext(DbContextOptions<NewsDbContext> options) : DbContext(
             entity.Property(e => e.Description).HasMaxLength(500).IsRequired();
             entity.Property(e => e.Url).IsRequired();
             entity.Property(e => e.Views);
-            entity.Property(e => e.HotNew).HasDefaultValue(false).IsRequired();
+            entity.Property(e => e.HotNews).HasDefaultValue(false).IsRequired();
             entity.Property(e => e.CategoryId);
             entity.Property(e => e.CreatedAt).HasDefaultValueSql("now()").IsRequired();
             entity.Property(e => e.UpdatedAt)
