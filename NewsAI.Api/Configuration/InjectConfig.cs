@@ -1,4 +1,6 @@
-using NewsAI.Core.Entities;
+using FluentValidation;
+using NewsAI.Core.Models.News;
+using NewsAI.Core.Models.News.Validators;
 using NewsAI.Data.Repositories;
 using NewsAI.Data.Service;
 using NewsAI.Infrastructure.Repositories;
@@ -12,8 +14,10 @@ public static class InjectConfig
     {
         //News
         services.AddScoped<INewsRepository, NewsRepository>();
-        services.AddScoped<ICommonService<News>, NewsService>();
-        
+        services.AddScoped<INewsService, NewsService>();
+        services.AddScoped<IValidator<CreateNewsDTO>, CreateNewsValidator>();
+        services.AddScoped<IValidator<UpdateNewsDTO>, UpdateNewsValidator>();
+
         //Category
         
         return services;
