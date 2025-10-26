@@ -2,7 +2,7 @@ namespace NewsAI.Infrastructure.Services;
 
 public interface ICommonService<T>
 {
-    List<string> Errors { get; }
+    // List<string> Errors { get; }
     Task<IEnumerable<T>> FindAll();
     
     Task<T?> FindById(Guid id);
