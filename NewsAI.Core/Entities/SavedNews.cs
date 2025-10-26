@@ -1,4 +1,4 @@
-namespace NewsAI.Infrastructure.Entities;
+namespace NewsAI.Core.Entities;
 
 public class SavedNews
 {

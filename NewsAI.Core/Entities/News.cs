@@ -1,4 +1,4 @@
-namespace NewsAI.Infrastructure.Entities;
+namespace NewsAI.Core.Entities;
 
 public class News
 {
@@ -10,9 +10,9 @@ public class News
 
     public string Url { get; set; } = null!;
 
-    public virtual int Views { get; set; }
+    public int Views { get; set; }
 
-    public virtual bool HotNew { get; set; } = false;
+    public bool HotNew { get; set; } = false;
 
     public DateTime CreatedAt { get; set; }
     
