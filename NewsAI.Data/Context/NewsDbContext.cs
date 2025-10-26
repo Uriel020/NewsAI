@@ -1,5 +1,5 @@
 using Microsoft.EntityFrameworkCore;
-using NewsAI.Infrastructure.Entities;
+using NewsAI.Core.Entities;
 
 namespace NewsAI.Data.Context;
 
@@ -127,7 +127,6 @@ public class NewsDbContext(DbContextOptions<NewsDbContext> options) : DbContext(
         });
 
         //NewsImages
-
         modelBuilder.Entity<NewsImages>(entity =>
         {
             entity.HasKey(e => e.Id);

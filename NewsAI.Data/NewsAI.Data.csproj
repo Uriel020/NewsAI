@@ -17,6 +17,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\NewsAI.Infrastructure\NewsAI.Infrastructure.csproj" />
+    <ProjectReference Include="..\NewsAI.Core\NewsAI.Core.csproj" />
   </ItemGroup>
 
 </Project>
