@@ -60,3 +60,6 @@ appsettings.*.json
 #Jetbrains
 .idea
 NewsAI.sln.DotSettings.user
+
+#VsCode
+.vscode
