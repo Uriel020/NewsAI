@@ -1,17 +1,18 @@
+using NewsAI.Core.Common;
+
 namespace NewsAI.Infrastructure.Services;
 
-public interface ICommonService<T>
+public interface ICommonService<TDto, TCreateDto, TUpdateDto>
 {
-    // List<string> Errors { get; }
-    Task<IEnumerable<T>> FindAll();
-    
-    Task<T?> FindById(Guid id);
+    Task<Result<IEnumerable<TDto>>> FindAll();
 
-    Task<bool> Create(T entity);
-    
-    Task<bool> Update(T entity);
+    Task<Result<TDto?>> FindById(Guid id);
 
-    Task<bool> Delete(Guid id);
+    Task<Result<TDto>> Create(TCreateDto entity);
+
+    Task<Result<TDto>> Update(Guid id, TUpdateDto entity);
+
+    Task<Result<TDto>> Delete(Guid id);
 
     Task<bool> ValidateExist(Guid id);
 }
