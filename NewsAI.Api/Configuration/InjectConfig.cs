@@ -1,4 +1,5 @@
 using FluentValidation;
+using NewsAI.Core.Mappers;
 using NewsAI.Core.Models.News;
 using NewsAI.Core.Models.News.Validators;
 using NewsAI.Data.Repositories;
@@ -12,13 +13,19 @@ public static class InjectConfig
 {
     public static IServiceCollection ConfigureInjections( this IServiceCollection services)
     {
-        //News
+        //Repositories
         services.AddScoped<INewsRepository, NewsRepository>();
+
+        //Services
         services.AddScoped<INewsService, NewsService>();
+        
+        //Validators
         services.AddScoped<IValidator<CreateNewsDTO>, CreateNewsValidator>();
         services.AddScoped<IValidator<UpdateNewsDTO>, UpdateNewsValidator>();
 
-        //Category
+        //Mappers
+        services.AddAutoMapper(typeof(NewsProfile));
+
         
         return services;
     }
