@@ -11,7 +11,7 @@ public interface INewsRepository
 
     public Task<News?> GetNewsByIdAsync(Guid id, CancellationToken cancellationToken = default);
     
-    public Task<bool> AddNewsAsync(News news ,CancellationToken cancellationToken = default);
+    public Task<News> AddNewsAsync(News news ,CancellationToken cancellationToken = default);
 
     public Task<bool> UpdateNewsAsync(News news ,CancellationToken cancellationToken = default);
 

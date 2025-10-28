@@ -8,11 +8,11 @@ public interface ICommonService<TDto, TCreateDto, TUpdateDto>
 
     Task<Result<TDto?>> FindById(Guid id);
 
-    Task<Result<TDto>> Create(TCreateDto entity);
+    Task<Result<Guid>> Create(TCreateDto entity);
 
-    Task<Result<TDto>> Update(Guid id, TUpdateDto entity);
+    Task<Result<bool>> Update(Guid id, TUpdateDto entity);
 
-    Task<Result<TDto>> Delete(Guid id);
+    Task <Result<bool>> Delete(Guid id);
 
     Task<bool> ValidateExist(Guid id);
 }
