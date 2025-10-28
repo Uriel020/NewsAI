@@ -24,10 +24,11 @@ public class NewsRepository : INewsRepository
        return await _context.News.FindAsync(id, cancellationToken);
     }
 
-    public async Task<bool> AddNewsAsync(News news, CancellationToken cancellationToken = default)
+    public async Task<News> AddNewsAsync(News news, CancellationToken cancellationToken = default)
     {
-        await _context.News.AddAsync(news, cancellationToken);
-        return await _context.SaveChangesAsync(cancellationToken) > 0;
+        var newNews = await _context.News.AddAsync(news, cancellationToken);
+        await _context.SaveChangesAsync(cancellationToken);
+        return newNews.Entity;
     }
 
     public async Task<bool> UpdateNewsAsync(News news, CancellationToken cancellationToken = default)

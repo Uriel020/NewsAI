@@ -1,4 +1,6 @@
+using AutoMapper;
 using FluentValidation;
+using FluentValidation.Results;
 using NewsAI.Core.Common;
 using NewsAI.Core.Entities;
 using NewsAI.Core.Models.News;
@@ -13,16 +15,19 @@ public class NewsService : INewsService
     private readonly INewsRepository _newsRepository;
     private readonly IValidator<CreateNewsDTO> _createNewsValidator;
     private readonly IValidator<UpdateNewsDTO> _updateNewsValidator;
+    private readonly IMapper _mapper;
 
     public NewsService(
-        INewsRepository newsRepository, 
+        INewsRepository newsRepository,
         IValidator<CreateNewsDTO> createNewsValidator,
-        IValidator<UpdateNewsDTO> updateNewsValidator
+        IValidator<UpdateNewsDTO> updateNewsValidator,
+        IMapper mapper
         )
     {
         _newsRepository = newsRepository;
         _createNewsValidator = createNewsValidator;
         _updateNewsValidator = updateNewsValidator;
+        _mapper = mapper;
     }
 
 
@@ -30,16 +35,7 @@ public class NewsService : INewsService
     {
         var news = await _newsRepository.GetNewsAsync();
 
-        var mapNews = news.Select(n => new NewsDto
-        {
-            Id = n.Id,
-            Title = n.Title,
-            Description = n.Description,
-            CategoryId = n.CategoryId,
-            Url = n.Url,
-            HotNews = n.HotNews,
-            Views = n.Views,
-        });
+        var mapNews = _mapper.Map<IEnumerable<NewsDto>>(news);
 
         return Result<IEnumerable<NewsDto>>.Success(mapNews);
     }
@@ -48,67 +44,63 @@ public class NewsService : INewsService
     {
         var newExist = await ValidateExist(id);
 
-        if (!newExist) return Result<NewsDto?>.Failure("Not found");
+        if (!newExist) return Result<NewsDto?>.Failure("News not found");
 
         var news = await _newsRepository.GetNewsByIdAsync(id);
 
-        var mapNews = new NewsDto
-        {
-            Id = news!.Id,
-            Title = news.Title,
-            Description = news.Description,
-            CategoryId = news.CategoryId,
-            Url = news.Url,
-            HotNews = news.HotNews,
-            Views = news.Views,
-        };
+        var mapNews = _mapper.Map<NewsDto>(news);
 
         return Result<NewsDto?>.Success(mapNews);
     }
 
-    public async Task<Result<NewsDto>> Create(CreateNewsDTO news)
+    public async Task<Result<Guid>> Create(CreateNewsDTO news)
     {
         var titleExist = await _newsRepository.SearchByTitle(news.Title);
 
-        if (titleExist) return Result<NewsDto>.Failure("Title already exist");
+        if (titleExist) return Result<Guid>.Failure("Title already exist");
 
         var validateNews = _createNewsValidator.Validate(news);
-        
-        if (!validateNews.IsValid) return Result<NewsDto>.Failure("Invalid data");
 
-        var mapNew = new News
+        if (!validateNews.IsValid) return Result<Guid>.Failure(validateNews.Errors);
+
+        var mapNews = _mapper.Map<News>(news);
+
+        News newNews = await _newsRepository.AddNewsAsync(mapNews);
+
+        return Result<Guid>.Success(newNews.Id);
+    }
+
+    public async Task<Result<bool>> Update(Guid id, UpdateNewsDTO news)
+    {
+        News? existingNews = await _newsRepository.GetNewsByIdAsync(id);
+
+        if (existingNews != null) return Result<bool>.Failure("News not found");
+
+        if (!string.IsNullOrWhiteSpace(news.Title) && news.Title != existingNews!.Title)
         {
-            Title = news.Title,
-            Description = news.Description,
-            CategoryId = news.CategoryId,
-            Url = news.Url,
-        };
-        
-        var newNews = await _newsRepository.AddNewsAsync(mapNew);
-        
-        return Result<NewsDto>.Success();
+            var titleExist = await _newsRepository.SearchByTitle(news.Title);
+            if (titleExist) return Result<bool>.Failure("Title already exist");
+        }
+
+        var validateNews = _updateNewsValidator.Validate(news);
+
+        if (!validateNews.IsValid) return Result<bool>.Failure(validateNews.Errors);
+
+        _mapper.Map<News>(news);
+
+        return Result<bool>.Success(true);
+
     }
 
-    public async Task<Result<NewsDto>> Update(Guid id, UpdateNewsDTO news)
+    public async Task<Result<bool>> Delete(Guid id)
     {
         var existNew = await ValidateExist(id);
 
-        if (!existNew) return false;
+        if (!existNew) return Result<bool>.Failure("News not found");
 
-        var titleExist = await _newsRepository.SearchByTitle(news.Title);
+        await _newsRepository.DeleteNewsAsync(id);
 
-        if (!titleExist) return await _newsRepository.UpdateNewsAsync(news);
-
-        return false;
-    }
-
-    public async Task<Result<NewsDto>> Delete(Guid id)
-    {
-        var existNew = await ValidateExist(id);
-
-        if (!existNew) return false;
-
-        return await _newsRepository.DeleteNewsAsync(id);
+        return Result<bool>.Success(true);
     }
 
     public async Task<bool> ValidateExist(Guid id)
