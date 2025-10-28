@@ -1,5 +1,4 @@
 using Microsoft.AspNetCore.Mvc;
-using NewsAI.Core.Entities;
 using NewsAI.Core.Models.News;
 using NewsAI.Infrastructure.Services;
 
@@ -30,15 +29,24 @@ namespace NewsAI.Api.Controllers
         {
             var news = await _newsService.FindById(id);
 
+            if (news.Error != null)
+            {
+                return NotFound(news.Error);
+            }
+
             return Ok(news);
         }
 
         [HttpPost]
-        public async Task<ActionResult<Guid>> AddNew(CreateNewsDTO newNews)
+        public async Task<ActionResult<Guid>> AddNew(CreateNewsDTO news)
         {
             if (!ModelState.IsValid) return BadRequest(ModelState);
 
-            await _newsService.Create(newNews);
+            var newNews = await _newsService.Create(news);
+
+            if (newNews.Error != null) return BadRequest(newNews.Error);
+
+            if (newNews.Errors != null) return BadRequest(newNews.Errors);
 
             return Created();
         }
@@ -48,7 +56,9 @@ namespace NewsAI.Api.Controllers
         {
             if (!ModelState.IsValid) return BadRequest(ModelState);
 
-            news = await _newsService.Update(id, news);
+            var updatedNews = await _newsService.Update(id, news);
+
+            if (updatedNews.Errors != null) return BadRequest(updatedNews.Errors);
 
             return Ok(news);
         }
@@ -56,8 +66,12 @@ namespace NewsAI.Api.Controllers
         [HttpDelete("{id:guid}")]
         public async Task<IActionResult> DeleteNews(Guid id)
         {
-            await _newsService.Delete(id);
+            var deletedNews = await _newsService.Delete(id);
 
+            if (deletedNews.Error != null)
+            {
+                return NotFound(deletedNews.Error);
+            }
             return NoContent();
         }
     }
