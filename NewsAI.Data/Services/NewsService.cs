@@ -1,10 +1,8 @@
 using AutoMapper;
 using FluentValidation;
-using FluentValidation.Results;
 using NewsAI.Core.Common;
 using NewsAI.Core.Entities;
 using NewsAI.Core.Models.News;
-using NewsAI.Core.Models.News.Validators;
 using NewsAI.Infrastructure.Repositories;
 using NewsAI.Infrastructure.Services;
 
