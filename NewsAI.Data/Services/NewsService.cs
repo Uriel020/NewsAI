@@ -44,7 +44,7 @@ public class NewsService : INewsService
     {
         var newExist = await ValidateExist(id);
 
-        if (!newExist) return Result<NewsDto?>.Failure("News not found");
+        if (!newExist) return Result<NewsDto?>.NotFound("News not found");
 
         var news = await _newsRepository.GetNewsByIdAsync(id);
 
@@ -57,7 +57,7 @@ public class NewsService : INewsService
     {
         var titleExist = await _newsRepository.SearchByTitle(news.Title);
 
-        if (titleExist) return Result<Guid>.Failure("Title already exist");
+        if (titleExist) return Result<Guid>.Conflict("Title already exist");
 
         var validateNews = _createNewsValidator.Validate(news);
 
@@ -74,12 +74,12 @@ public class NewsService : INewsService
     {
         News? existingNews = await _newsRepository.GetNewsByIdAsync(id);
 
-        if (existingNews == null) return Result<bool>.Failure("News not found");
+        if (existingNews == null) return Result<bool>.NotFound("News not found");
 
         if (!string.IsNullOrWhiteSpace(news.Title) && news.Title != existingNews!.Title)
         {
             var titleExist = await _newsRepository.SearchByTitle(news.Title);
-            if (titleExist) return Result<bool>.Failure("Title already exist");
+            if (titleExist) return Result<bool>.Conflict("Title already exist");
         }
 
         var validateNews = _updateNewsValidator.Validate(news);
@@ -98,7 +98,7 @@ public class NewsService : INewsService
     {
         var existNew = await ValidateExist(id);
 
-        if (!existNew) return Result<bool>.Failure("News not found");
+        if (!existNew) return Result<bool>.NotFound("News not found");
 
         await _newsRepository.DeleteNewsAsync(id);
 
