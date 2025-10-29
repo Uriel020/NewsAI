@@ -74,7 +74,7 @@ public class NewsService : INewsService
     {
         News? existingNews = await _newsRepository.GetNewsByIdAsync(id);
 
-        if (existingNews != null) return Result<bool>.Failure("News not found");
+        if (existingNews == null) return Result<bool>.Failure("News not found");
 
         if (!string.IsNullOrWhiteSpace(news.Title) && news.Title != existingNews!.Title)
         {
@@ -86,7 +86,9 @@ public class NewsService : INewsService
 
         if (!validateNews.IsValid) return Result<bool>.Failure(validateNews.Errors);
 
-        _mapper.Map<News>(news);
+        var mapNews = _mapper.Map<News>(news);
+
+        await _newsRepository.UpdateNewsAsync(mapNews);
 
         return Result<bool>.Success(true);
 
