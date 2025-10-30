@@ -12,7 +12,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace NewsAI.Data.Migrations
 {
     [DbContext(typeof(NewsDbContext))]
-    [Migration("20251024191103_InitialCreate")]
+    [Migration("20251029165314_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />
@@ -25,7 +25,7 @@ namespace NewsAI.Data.Migrations
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
-            modelBuilder.Entity("NewsAI.Infrastructure.Entities.Category", b =>
+            modelBuilder.Entity("NewsAI.Core.Entities.Category", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -57,7 +57,7 @@ namespace NewsAI.Data.Migrations
                     b.ToTable("categories", (string)null);
                 });
 
-            modelBuilder.Entity("NewsAI.Infrastructure.Entities.News", b =>
+            modelBuilder.Entity("NewsAI.Core.Entities.News", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -77,7 +77,7 @@ namespace NewsAI.Data.Migrations
                         .HasMaxLength(500)
                         .HasColumnType("character varying(500)");
 
-                    b.Property<bool>("HotNew")
+                    b.Property<bool>("HotNews")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("boolean")
                         .HasDefaultValue(false);
@@ -106,7 +106,7 @@ namespace NewsAI.Data.Migrations
                     b.ToTable("News");
                 });
 
-            modelBuilder.Entity("NewsAI.Infrastructure.Entities.NewsImages", b =>
+            modelBuilder.Entity("NewsAI.Core.Entities.NewsImages", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -132,7 +132,7 @@ namespace NewsAI.Data.Migrations
                     b.ToTable("newsImages", (string)null);
                 });
 
-            modelBuilder.Entity("NewsAI.Infrastructure.Entities.SavedNews", b =>
+            modelBuilder.Entity("NewsAI.Core.Entities.SavedNews", b =>
                 {
                     b.Property<Guid>("NewsId")
                         .HasColumnType("uuid");
@@ -152,7 +152,7 @@ namespace NewsAI.Data.Migrations
                     b.ToTable("savedNews", (string)null);
                 });
 
-            modelBuilder.Entity("NewsAI.Infrastructure.Entities.User", b =>
+            modelBuilder.Entity("NewsAI.Core.Entities.User", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -210,9 +210,9 @@ namespace NewsAI.Data.Migrations
                     b.ToTable("users", (string)null);
                 });
 
-            modelBuilder.Entity("NewsAI.Infrastructure.Entities.News", b =>
+            modelBuilder.Entity("NewsAI.Core.Entities.News", b =>
                 {
-                    b.HasOne("NewsAI.Infrastructure.Entities.Category", "Category")
+                    b.HasOne("NewsAI.Core.Entities.Category", "Category")
                         .WithMany("News")
                         .HasForeignKey("CategoryId")
                         .OnDelete(DeleteBehavior.SetNull)
@@ -221,9 +221,9 @@ namespace NewsAI.Data.Migrations
                     b.Navigation("Category");
                 });
 
-            modelBuilder.Entity("NewsAI.Infrastructure.Entities.NewsImages", b =>
+            modelBuilder.Entity("NewsAI.Core.Entities.NewsImages", b =>
                 {
-                    b.HasOne("NewsAI.Infrastructure.Entities.News", "News")
+                    b.HasOne("NewsAI.Core.Entities.News", "News")
                         .WithMany("NewsImages")
                         .HasForeignKey("NewsId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -233,16 +233,16 @@ namespace NewsAI.Data.Migrations
                     b.Navigation("News");
                 });
 
-            modelBuilder.Entity("NewsAI.Infrastructure.Entities.SavedNews", b =>
+            modelBuilder.Entity("NewsAI.Core.Entities.SavedNews", b =>
                 {
-                    b.HasOne("NewsAI.Infrastructure.Entities.News", "News")
+                    b.HasOne("NewsAI.Core.Entities.News", "News")
                         .WithMany("SavedByUser")
                         .HasForeignKey("NewsId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired()
                         .HasConstraintName("saved_news_id_fkey");
 
-                    b.HasOne("NewsAI.Infrastructure.Entities.User", "User")
+                    b.HasOne("NewsAI.Core.Entities.User", "User")
                         .WithMany("SavedNews")
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -254,19 +254,19 @@ namespace NewsAI.Data.Migrations
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("NewsAI.Infrastructure.Entities.Category", b =>
+            modelBuilder.Entity("NewsAI.Core.Entities.Category", b =>
                 {
                     b.Navigation("News");
                 });
 
-            modelBuilder.Entity("NewsAI.Infrastructure.Entities.News", b =>
+            modelBuilder.Entity("NewsAI.Core.Entities.News", b =>
                 {
                     b.Navigation("NewsImages");
 
                     b.Navigation("SavedByUser");
                 });
 
-            modelBuilder.Entity("NewsAI.Infrastructure.Entities.User", b =>
+            modelBuilder.Entity("NewsAI.Core.Entities.User", b =>
                 {
                     b.Navigation("SavedNews");
                 });

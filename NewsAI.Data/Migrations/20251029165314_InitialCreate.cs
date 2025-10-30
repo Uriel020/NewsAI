@@ -56,7 +56,7 @@ namespace NewsAI.Data.Migrations
                     Description = table.Column<string>(type: "character varying(500)", maxLength: 500, nullable: false),
                     Url = table.Column<string>(type: "text", nullable: false),
                     Views = table.Column<int>(type: "integer", nullable: false),
-                    HotNew = table.Column<bool>(type: "boolean", nullable: false, defaultValue: false),
+                    HotNews = table.Column<bool>(type: "boolean", nullable: false, defaultValue: false),
                     CreatedAt = table.Column<DateTime>(type: "timestamp without time zone", nullable: false, defaultValueSql: "now()"),
                     UpdatedAt = table.Column<DateTime>(type: "timestamp without time zone", nullable: false, defaultValueSql: "now()"),
                     CategoryId = table.Column<Guid>(type: "uuid", nullable: true)
