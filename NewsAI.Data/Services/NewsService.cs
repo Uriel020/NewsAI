@@ -42,7 +42,7 @@ public class NewsService : INewsService
     {
         var newExist = await ValidateExist(id);
 
-        if (!newExist) return Result<NewsDto?>.NotFound("News not found");
+        if (!newExist) return Result<NewsDto?>.NotFound("News not found with id: " + id);
 
         var news = await _newsRepository.GetNewsByIdAsync(id);
 
