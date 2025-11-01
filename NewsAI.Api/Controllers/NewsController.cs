@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
+using NewsAI.Core.Common;
 using NewsAI.Core.Models.News;
 using NewsAI.Infrastructure.Services;
 
@@ -21,7 +22,7 @@ namespace NewsAI.Api.Controllers
         {
             var newsList = await _newsService.FindAll();
 
-            return Ok(newsList);
+            return Ok(newsList.Value);
         }
 
         [HttpGet("{id:guid}")]
@@ -29,12 +30,7 @@ namespace NewsAI.Api.Controllers
         {
             var news = await _newsService.FindById(id);
 
-            if (news.Error != null)
-            {
-                return NotFound(news.Error);
-            }
-
-            return Ok(news);
+            return news.HttpErrorType == HttpErrorType.NotFound ?  NotFound(news.Error) : Ok(news.Value);
         }
 
         [HttpPost]
