@@ -26,7 +26,6 @@ public static class InjectConfig
         //Mappers
         services.AddAutoMapper(typeof(NewsProfile));
 
-        
         return services;
     }
 }
