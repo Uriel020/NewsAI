@@ -3,7 +3,7 @@ using NewsAI.Core.Mappers;
 using NewsAI.Core.Models.News;
 using NewsAI.Core.Models.News.Validators;
 using NewsAI.Data.Repositories;
-using NewsAI.Data.Service;
+using NewsAI.Data.Services;
 using NewsAI.Infrastructure.Repositories;
 using NewsAI.Infrastructure.Services;
 
@@ -15,6 +15,7 @@ public static class InjectConfig
     {
         //Repositories
         services.AddScoped<INewsRepository, NewsRepository>();
+        services.AddScoped<ICategoryRepository, CategoryRepository>();
 
         //Services
         services.AddScoped<INewsService, NewsService>();
