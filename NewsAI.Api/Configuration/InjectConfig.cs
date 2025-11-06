@@ -21,8 +21,8 @@ public static class InjectConfig
         services.AddScoped<INewsService, NewsService>();
         
         //Validators
-        services.AddScoped<IValidator<CreateNewsDTO>, CreateNewsValidator>();
-        services.AddScoped<IValidator<UpdateNewsDTO>, UpdateNewsValidator>();
+        services.AddScoped<IValidator<CreateNewsDto>, CreateNewsValidator>();
+        services.AddScoped<IValidator<UpdateNewsDto>, UpdateNewsValidator>();
 
         //Mappers
         services.AddAutoMapper(typeof(NewsProfile));

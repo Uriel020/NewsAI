@@ -9,8 +9,8 @@ public class NewsProfile : Profile
     public NewsProfile()
     {
         CreateMap<News, NewsDto>();
-        CreateMap<CreateNewsDTO, News>();
-        CreateMap<UpdateNewsDTO, News>()
-        .ForAllMembers(opt => opt.Condition((src, dest, srcMember) => srcMember != null)); 
+        CreateMap<CreateNewsDto, News>();
+        CreateMap<UpdateNewsDto, News>()
+        .ForAllMembers(opt => opt.Condition((src, dest, srcMember) => srcMember != null));
     }
 }

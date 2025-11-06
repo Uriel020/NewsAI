@@ -6,19 +6,19 @@ using NewsAI.Core.Models.News;
 using NewsAI.Infrastructure.Repositories;
 using NewsAI.Infrastructure.Services;
 
-namespace NewsAI.Data.Service;
+namespace NewsAI.Data.Services;
 
 public class NewsService : INewsService
 {
     private readonly INewsRepository _newsRepository;
-    private readonly IValidator<CreateNewsDTO> _createNewsValidator;
-    private readonly IValidator<UpdateNewsDTO> _updateNewsValidator;
+    private readonly IValidator<CreateNewsDto> _createNewsValidator;
+    private readonly IValidator<UpdateNewsDto> _updateNewsValidator;
     private readonly IMapper _mapper;
 
     public NewsService(
         INewsRepository newsRepository,
-        IValidator<CreateNewsDTO> createNewsValidator,
-        IValidator<UpdateNewsDTO> updateNewsValidator,
+        IValidator<CreateNewsDto> createNewsValidator,
+        IValidator<UpdateNewsDto> updateNewsValidator,
         IMapper mapper
         )
     {
@@ -31,7 +31,7 @@ public class NewsService : INewsService
 
     public async Task<Result<IEnumerable<NewsDto>>> FindAll()
     {
-        var news = await _newsRepository.GetNewsAsync();
+        var news = await _newsRepository.GetAllAsync();
 
         var mapNews = _mapper.Map<IEnumerable<NewsDto>>(news);
 
@@ -44,14 +44,14 @@ public class NewsService : INewsService
 
         if (!newExist) return Result<NewsDto?>.NotFound("News not found with id: " + id);
 
-        var news = await _newsRepository.GetNewsByIdAsync(id);
+        var news = await _newsRepository.GetByIdAsync(id);
 
         var mapNews = _mapper.Map<NewsDto>(news);
 
         return Result<NewsDto?>.Success(mapNews);
     }
 
-    public async Task<Result<Guid>> Create(CreateNewsDTO news)
+    public async Task<Result<Guid>> Create(CreateNewsDto news)
     {
         var titleExist = await _newsRepository.SearchByTitle(news.Title);
 
@@ -63,14 +63,14 @@ public class NewsService : INewsService
 
         var mapNews = _mapper.Map<News>(news);
 
-        News newNews = await _newsRepository.AddNewsAsync(mapNews);
+        News newNews = await _newsRepository.AddAsync(mapNews);
 
         return Result<Guid>.Success(newNews.Id);
     }
 
-    public async Task<Result<bool>> Update(Guid id, UpdateNewsDTO news)
+    public async Task<Result<bool>> Update(Guid id, UpdateNewsDto news)
     {
-        News? existingNews = await _newsRepository.GetNewsByIdAsync(id);
+        News? existingNews = await _newsRepository.GetByIdAsync(id);
 
         if (existingNews == null) return Result<bool>.NotFound("News not found");
 
@@ -86,7 +86,7 @@ public class NewsService : INewsService
 
         var mapNews = _mapper.Map<News>(news);
 
-        await _newsRepository.UpdateNewsAsync(mapNews);
+        await _newsRepository.UpdateAsync(mapNews);
 
         return Result<bool>.Success(true);
 
@@ -98,15 +98,20 @@ public class NewsService : INewsService
 
         if (!existNew) return Result<bool>.NotFound("News not found");
 
-        await _newsRepository.DeleteNewsAsync(id);
+        await _newsRepository.DeleteAsync(id);
 
         return Result<bool>.Success(true);
     }
 
     public async Task<bool> ValidateExist(Guid id)
     {
-        var exist = await _newsRepository.GetNewsByIdAsync(id);
+        var exist = await _newsRepository.GetByIdAsync(id);
 
         return exist != null;
+    }
+
+    public Task<Result<bool>> SearchCategory(Guid id)
+    {
+        throw new NotImplementedException();
     }
 }

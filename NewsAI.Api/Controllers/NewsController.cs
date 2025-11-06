@@ -34,7 +34,7 @@ namespace NewsAI.Api.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult<Guid>> AddNew(CreateNewsDTO news)
+        public async Task<ActionResult<Guid>> AddNew(CreateNewsDto news)
         {
             if (!ModelState.IsValid) return BadRequest(ModelState);
 
@@ -48,7 +48,7 @@ namespace NewsAI.Api.Controllers
         }
 
         [HttpPut("{id:guid}")]
-        public async Task<ActionResult<Guid>> UpdateNews(Guid id, UpdateNewsDTO news)
+        public async Task<ActionResult<Guid>> UpdateNews(Guid id, UpdateNewsDto news)
         {
             if (!ModelState.IsValid) return BadRequest(ModelState);
 

@@ -3,7 +3,7 @@ using FluentValidation;
 
 namespace NewsAI.Core.Models.News.Validators;
 
-public class CreateNewsValidator:AbstractValidator<CreateNewsDTO>
+public class CreateNewsValidator:AbstractValidator<CreateNewsDto>
 {
     public CreateNewsValidator()
     {

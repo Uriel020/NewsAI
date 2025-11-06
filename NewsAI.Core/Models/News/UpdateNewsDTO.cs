@@ -1,6 +1,6 @@
 namespace NewsAI.Core.Models.News;
 
-public class UpdateNewsDTO
+public class UpdateNewsDto
 {
     public string? Title { get; set; }
 
