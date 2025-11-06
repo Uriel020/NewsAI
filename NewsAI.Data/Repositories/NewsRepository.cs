@@ -14,30 +14,30 @@ public class NewsRepository : INewsRepository
         _context = context;
     }
 
-    public async Task<IEnumerable<News>> GetNewsAsync(CancellationToken cancellationToken = default)
+    public async Task<IEnumerable<News>> GetAllAsync(CancellationToken cancellationToken = default)
     {
         return await _context.News.ToListAsync(cancellationToken);
     }
 
-    public async Task<News?> GetNewsByIdAsync(Guid id, CancellationToken cancellationToken = default)
+    public async Task<News?> GetByIdAsync(Guid id, CancellationToken cancellationToken = default)
     {
        return await _context.News.FindAsync(id, cancellationToken);
     }
 
-    public async Task<News> AddNewsAsync(News news, CancellationToken cancellationToken = default)
+    public async Task<News> AddAsync(News news, CancellationToken cancellationToken = default)
     {
         var newNews = await _context.News.AddAsync(news, cancellationToken);
         await _context.SaveChangesAsync(cancellationToken);
         return newNews.Entity;
     }
 
-    public async Task<bool> UpdateNewsAsync(News news, CancellationToken cancellationToken = default)
+    public async Task<bool> UpdateAsync(News news, CancellationToken cancellationToken = default)
     {
         _context.News.Update(news);
         return await _context.SaveChangesAsync(cancellationToken) > 0;
     }
 
-    public async Task<bool> DeleteNewsAsync(Guid id, CancellationToken cancellationToken = default)
+    public async Task<bool> DeleteAsync(Guid id, CancellationToken cancellationToken = default)
     {
         var news = new News { Id = id };
         _context.News.Attach(news);
