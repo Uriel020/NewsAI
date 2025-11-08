@@ -84,7 +84,8 @@ public class NewsDbContext(DbContextOptions<NewsDbContext> options) : DbContext(
             entity.HasKey(e => e.Id);
             
             entity.Property(e => e.Id).HasDefaultValueSql("gen_random_uuid()");
-            entity.Property(e => e.Name).HasMaxLength(100).IsRequired();
+            entity.Property(e => e.Name).HasMaxLength(50).IsRequired();
+            entity.Property(e => e.Description).HasMaxLength(100).IsRequired();
             entity.Property(e => e.IsActive).HasDefaultValue(true).IsRequired();
             entity.Property(e => e.CreatedAt).HasDefaultValueSql("now()").IsRequired();
             entity.Property(e => e.UpdatedAt)
