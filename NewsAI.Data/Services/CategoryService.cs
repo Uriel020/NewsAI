@@ -1,19 +1,51 @@
+using AutoMapper;
+using FluentValidation;
 using NewsAI.Core.Common;
 using NewsAI.Core.Models.Category;
+using NewsAI.Core.Models.Category.Validators;
+using NewsAI.Infrastructure.Repositories;
 using NewsAI.Infrastructure.Services;
 
 namespace NewsAI.Data.Services
 {
-    public class CategoryService: ICategoryService
+    public class CategoryService : ICategoryService
     {
-        public Task<Result<IEnumerable<CategoryDto>>> FindAll()
+        private readonly ICategoryRepository _categoryRepository;
+        private readonly IValidator<CreateCategoryValidator> _createCategoryValidator;
+        private readonly IValidator<UpdateCategoryValidator> _updateCategoryValidator;
+        private readonly IMapper _categoryMapper;
+
+        public CategoryService(
+            ICategoryRepository categoryRepository,
+            IValidator<CreateCategoryValidator> createCategoryValidator,
+            IValidator<UpdateCategoryValidator> updateCategoryValidator,
+            IMapper categoryMapper
+            )
         {
-            throw new NotImplementedException();
+            _categoryRepository = categoryRepository;
+            _createCategoryValidator = createCategoryValidator;
+            _updateCategoryValidator = updateCategoryValidator;
+            _categoryMapper = categoryMapper;
         }
 
-        public Task<Result<CategoryDto?>> FindById(Guid id)
+        public async Task<Result<IEnumerable<CategoryDto>>> FindAll()
         {
-            throw new NotImplementedException();
+            var categories = await _categoryRepository.GetAllAsync();
+
+            var mapCategories = _categoryMapper.Map<IEnumerable<CategoryDto>>(categories);
+
+            return Result<IEnumerable<CategoryDto>>.Success(mapCategories);
+        }
+
+        public async Task<Result<CategoryDto?>> FindById(Guid id)
+        {
+            await ValidateExist(id);
+
+            var category = await _categoryRepository.GetByIdAsync(id);
+
+            var mapCategory = _categoryMapper.Map<CategoryDto>(category);
+
+            return Result<CategoryDto?>.Success(mapCategory);
         }
 
         public Task<Result<Guid>> Create(CreateCategoryDto entity)
@@ -26,14 +58,22 @@ namespace NewsAI.Data.Services
             throw new NotImplementedException();
         }
 
-        public Task<Result<bool>> Delete(Guid id)
+        public async Task<Result<bool>> Delete(Guid id)
         {
-            throw new NotImplementedException();
+            await ValidateExist(id);
+
+            await _categoryRepository.DeleteAsync(id);
+
+            return Result<bool>.Success(true);
         }
 
-        public Task<bool> ValidateExist(Guid id)
+        public async Task<Result<bool>> ValidateExist(Guid id)
         {
-            throw new NotImplementedException();
+            var exist = await _categoryRepository.GetByIdAsync(id);
+
+            if(exist == null) return Result<bool>.NotFound("Category not found");
+
+            return Result<bool>.Success(true);
         }
     }
 }

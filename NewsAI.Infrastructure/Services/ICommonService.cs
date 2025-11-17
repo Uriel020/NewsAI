@@ -14,5 +14,5 @@ public interface ICommonService<TDto, TCreateDto, TUpdateDto>
 
     Task <Result<bool>> Delete(Guid id);
 
-    Task<bool> ValidateExist(Guid id);
+    Task<Result<bool>> ValidateExist(Guid id);
 }
