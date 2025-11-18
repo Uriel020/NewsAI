@@ -48,9 +48,9 @@ namespace NewsAI.Data.Services
             return Result<CategoryDto?>.Success(mapCategory);
         }
 
-        public Task<Result<Guid>> Create(CreateCategoryDto entity)
+        public async Task<Result<Guid>> Create(CreateCategoryDto entity)
         {
-            throw new NotImplementedException();
+            
         }
 
         public Task<Result<bool>> Update(Guid id, UpdateCategoryDto entity)
