@@ -1,6 +1,7 @@
 using AutoMapper;
 using FluentValidation;
 using NewsAI.Core.Common;
+using NewsAI.Core.Entities;
 using NewsAI.Core.Models.Category;
 using NewsAI.Core.Models.Category.Validators;
 using NewsAI.Infrastructure.Repositories;
@@ -11,14 +12,14 @@ namespace NewsAI.Data.Services
     public class CategoryService : ICategoryService
     {
         private readonly ICategoryRepository _categoryRepository;
-        private readonly IValidator<CreateCategoryValidator> _createCategoryValidator;
-        private readonly IValidator<UpdateCategoryValidator> _updateCategoryValidator;
+        private readonly IValidator<CreateCategoryDto> _createCategoryValidator;
+        private readonly IValidator<UpdateCategoryDto> _updateCategoryValidator;
         private readonly IMapper _categoryMapper;
 
         public CategoryService(
             ICategoryRepository categoryRepository,
-            IValidator<CreateCategoryValidator> createCategoryValidator,
-            IValidator<UpdateCategoryValidator> updateCategoryValidator,
+            IValidator<CreateCategoryDto> createCategoryValidator,
+            IValidator<UpdateCategoryDto> updateCategoryValidator,
             IMapper categoryMapper
             )
         {
@@ -48,12 +49,24 @@ namespace NewsAI.Data.Services
             return Result<CategoryDto?>.Success(mapCategory);
         }
 
-        public async Task<Result<Guid>> Create(CreateCategoryDto entity)
+        public async Task<Result<Guid>> Create(CreateCategoryDto category)
         {
-            
+            var nameExist = await _categoryRepository.FindName(category.Name);
+
+            if(!nameExist) return Result<Guid>.Conflict("Name already exist");
+
+            var validateCategory = _createCategoryValidator.Validate(category);
+
+            if(!validateCategory.IsValid) return Result<Guid>.BadRequest(validateCategory.Errors);
+
+            var mapCategory = _categoryMapper.Map<Category>(category);
+
+            Category newCategory = await _categoryRepository.AddAsync(mapCategory);
+
+            return Result<Guid>.Success(newCategory.Id);
         }
 
-        public Task<Result<bool>> Update(Guid id, UpdateCategoryDto entity)
+        public Task<Result<bool>> Update(Guid id, UpdateCategoryDto category)
         {
             throw new NotImplementedException();
         }
