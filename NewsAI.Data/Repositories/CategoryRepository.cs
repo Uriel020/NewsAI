@@ -45,7 +45,7 @@ namespace NewsAI.Data.Repositories
             return await _context.SaveChangesAsync(cancellationToken) > 0;
         }
 
-        public async Task<bool> NameExist (string categoryName, CancellationToken cancellationToken = default)
+        public async Task<bool> FindName (string categoryName, CancellationToken cancellationToken = default)
         {
             var exist = await _context.Categories.FindAsync(categoryName);
 

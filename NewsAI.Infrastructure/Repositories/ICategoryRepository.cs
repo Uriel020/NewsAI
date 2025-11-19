@@ -4,6 +4,6 @@ namespace NewsAI.Infrastructure.Repositories
 {
     public interface ICategoryRepository : ICommonRepository<Category>
     {
-        public Task<bool> NameExist (string categoryName, CancellationToken cancellationToken = default);
+        public Task<bool> FindName (string categoryName, CancellationToken cancellationToken = default);
     }
 }
