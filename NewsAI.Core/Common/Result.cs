@@ -29,12 +29,14 @@ public class Result<T>
 
     public static Result<T> Failure(string error) => new(default!, false, error);
 
-    public static Result<T> Failure(List<ValidationFailure> errors) => new(default!, false, null, HttpErrorType.None, errors);
+    // public static Result<T> Failure(List<ValidationFailure> errors) => new(default!, false, null, HttpErrorType.None, errors);
 
 
     //Results for Http Errors
 
     public static Result<T> BadRequest(string error) => new(default!, false, error, HttpErrorType.BadRequest); //400 BadRequest
+
+    public static Result<T> BadRequest(List<ValidationFailure> errors) => new(default!, false, null, HttpErrorType.BadRequest, errors); //400 BadRequest
 
     public static Result<T> Unauthorized(string error = "Invalid access") => new(default!, false, error, HttpErrorType.Unauthorized); //401 Unauthorized
 

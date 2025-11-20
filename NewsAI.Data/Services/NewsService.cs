@@ -57,7 +57,7 @@ public class NewsService : INewsService
 
         var validateNews = _createNewsValidator.Validate(news);
 
-        if (!validateNews.IsValid) return Result<Guid>.Failure(validateNews.Errors);
+        if (!validateNews.IsValid) return Result<Guid>.BadRequest(validateNews.Errors);
 
         var mapNews = _newsMapper.Map<News>(news);
 
@@ -80,7 +80,7 @@ public class NewsService : INewsService
 
         var validateNews = _updateNewsValidator.Validate(news);
 
-        if (!validateNews.IsValid) return Result<bool>.Failure(validateNews.Errors);
+        if (!validateNews.IsValid) return Result<bool>.BadRequest(validateNews.Errors);
 
         var mapNews = _newsMapper.Map<News>(news);
 
