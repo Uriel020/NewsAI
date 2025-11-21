@@ -53,11 +53,11 @@ namespace NewsAI.Data.Services
         {
             var nameExist = await _categoryRepository.FindName(category.Name);
 
-            if(!nameExist) return Result<Guid>.Conflict("Name already exist");
+            if (!nameExist) return Result<Guid>.Conflict("Name already exist");
 
             var validateCategory = _createCategoryValidator.Validate(category);
 
-            if(!validateCategory.IsValid) return Result<Guid>.BadRequest(validateCategory.Errors);
+            if (!validateCategory.IsValid) return Result<Guid>.BadRequest(validateCategory.Errors);
 
             var mapCategory = _categoryMapper.Map<Category>(category);
 
@@ -66,9 +66,27 @@ namespace NewsAI.Data.Services
             return Result<Guid>.Success(newCategory.Id);
         }
 
-        public Task<Result<bool>> Update(Guid id, UpdateCategoryDto category)
+        public async Task<Result<bool>> Update(Guid id, UpdateCategoryDto category)
         {
-            throw new NotImplementedException();
+            await ValidateExist(id);
+
+            if (category.Name != null)
+            {
+                var nameExist = await _categoryRepository.FindName(category.Name);
+
+                if (!nameExist) return Result<bool>.Conflict("Name already exist");
+            }
+
+            var validateCategory = _updateCategoryValidator.Validate(category);
+
+            if (!validateCategory.IsValid) return Result<bool>.BadRequest(validateCategory.Errors);
+
+            var mapCategory = _categoryMapper.Map<Category>(category);
+
+            await _categoryRepository.UpdateAsync(mapCategory);
+
+            return Result<bool>.Success(true);
+
         }
 
         public async Task<Result<bool>> Delete(Guid id)
@@ -84,7 +102,7 @@ namespace NewsAI.Data.Services
         {
             var exist = await _categoryRepository.GetByIdAsync(id);
 
-            if(exist == null) return Result<bool>.NotFound("Category not found");
+            if (exist == null) return Result<bool>.NotFound("Category not found");
 
             return Result<bool>.Success(true);
         }
