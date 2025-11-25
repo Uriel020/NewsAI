@@ -26,13 +26,58 @@ namespace NewsAI.Api.Controllers
 
         [HttpGet("{id:guid}")]
 
-        public async Task<ActionResult<CategoryDto>> GetCategoryById (Guid id)
+        public async Task<ActionResult<CategoryDto>> GetCategoryById(Guid id)
         {
             var category = await _categoryService.FindById(id);
+            return category.HttpErrorType == HttpErrorType.NotFound ? NotFound(category.Error) : Ok(category.Value);
+        }
 
-            if(category.HttpErrorType == HttpErrorType.NotFound ) return NotFound(category.Error);
+        [HttpPost]
 
-            return Ok(category.Value);
+        public async Task<ActionResult<Guid>> CreateCategory (CreateCategoryDto category)
+        {
+            var newCategory = await _categoryService.Create(category);
+
+            if(newCategory.HttpErrorType != HttpErrorType.None)
+            {
+                return newCategory.HttpErrorType switch
+                {
+                    HttpErrorType.BadRequest => BadRequest(newCategory.Errors),
+                    HttpErrorType.Conflict => Conflict(newCategory.Error),
+                    _ => StatusCode(500, "An unexpected error occurred")
+                };
+            }
+
+            return Created(newCategory.Value);
+        }
+
+        [HttpPut("{id:guid}")]
+
+        public async Task<IActionResult> UpdateCategory(Guid id, UpdateCategoryDto category)
+        {
+            var updateCategory = await _categoryService.Update(id, category);
+
+            if (updateCategory.HttpErrorType != HttpErrorType.None)
+            {
+                return updateCategory.HttpErrorType switch
+                {
+                    HttpErrorType.NotFound => NotFound(updateCategory.Error),
+                    HttpErrorType.BadRequest => BadRequest(updateCategory.Errors),
+                    HttpErrorType.Conflict => Conflict(updateCategory.Error),
+
+                    _ => StatusCode(500, "An unexpected error occurred")
+                };
+            }
+            return Accepted();
+        }
+
+        [HttpDelete("{id:guid}")]
+
+        public async Task<IActionResult> DeleteCategory(Guid id)
+        {
+            var deletedCategory = await _categoryService.Delete(id);
+
+            return deletedCategory.HttpErrorType == HttpErrorType.NotFound ? NotFound(deletedCategory.Error) : Accepted();
         }
     }
 }
