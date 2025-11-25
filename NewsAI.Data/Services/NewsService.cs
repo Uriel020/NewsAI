@@ -99,16 +99,16 @@ public class NewsService : INewsService
         return Result<bool>.Success(true);
     }
 
-    public async Task<Result<bool>> ValidateExist(Guid id)
+    public async Task<Result<News>> ValidateExist(Guid id)
     {
         var exist = await _newsRepository.GetByIdAsync(id);
 
-        if (exist == null) return Result<bool>.NotFound("News not found");
+        if (exist == null) return Result<News>.NotFound("News not found");
 
-        return Result<bool>.Success(true);
+        return Result<News>.Success(exist);
     }
 
-    public Task<Result<bool>> SearchCategory(Guid id)
+    public Task<Result<Category>> SearchCategory(Guid id)
     {
         throw new NotImplementedException();
     }
