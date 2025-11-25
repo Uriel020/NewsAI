@@ -1,9 +1,10 @@
 using NewsAI.Core.Common;
+using NewsAI.Core.Entities;
 using NewsAI.Core.Models.News;
 
 namespace NewsAI.Infrastructure.Services;
 
-public interface INewsService : ICommonService<NewsDto, CreateNewsDto, UpdateNewsDto>
+public interface INewsService : ICommonService<News,NewsDto, CreateNewsDto, UpdateNewsDto>
 {
-    Task<Result<bool>> SearchCategory(Guid id);
+    Task<Result<Category>> SearchCategory(Guid id);
 }
