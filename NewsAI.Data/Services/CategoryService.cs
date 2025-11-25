@@ -3,7 +3,6 @@ using FluentValidation;
 using NewsAI.Core.Common;
 using NewsAI.Core.Entities;
 using NewsAI.Core.Models.Category;
-using NewsAI.Core.Models.Category.Validators;
 using NewsAI.Infrastructure.Repositories;
 using NewsAI.Infrastructure.Services;
 
@@ -40,11 +39,11 @@ namespace NewsAI.Data.Services
 
         public async Task<Result<CategoryDto?>> FindById(Guid id)
         {
-            await ValidateExist(id);
+            var exist = await ValidateExist(id);
 
-            var category = await _categoryRepository.GetByIdAsync(id);
+            if(!exist.IsSuccess) return Result<CategoryDto>.NotFound(exist.Error);
 
-            var mapCategory = _categoryMapper.Map<CategoryDto>(category);
+            var mapCategory = _categoryMapper.Map<CategoryDto>(exist.Value);
 
             return Result<CategoryDto?>.Success(mapCategory);
         }
@@ -68,7 +67,9 @@ namespace NewsAI.Data.Services
 
         public async Task<Result<bool>> Update(Guid id, UpdateCategoryDto category)
         {
-            await ValidateExist(id);
+            var exist = await ValidateExist(id);
+
+            if(!exist.IsSuccess) return Result<bool>.NotFound(exist.Error);
 
             if (category.Name != null)
             {
@@ -91,20 +92,22 @@ namespace NewsAI.Data.Services
 
         public async Task<Result<bool>> Delete(Guid id)
         {
-            await ValidateExist(id);
+            var exist = await ValidateExist(id);
+
+            if(!exist.IsSuccess) return Result<bool>.NotFound(exist.Error);
 
             await _categoryRepository.DeleteAsync(id);
 
             return Result<bool>.Success(true);
         }
 
-        public async Task<Result<bool>> ValidateExist(Guid id)
+        public async Task<Result<Category>> ValidateExist(Guid id)
         {
             var exist = await _categoryRepository.GetByIdAsync(id);
 
-            if (exist == null) return Result<bool>.NotFound("Category not found");
+            if (exist == null) return Result<Category>.NotFound("Category not found");
 
-            return Result<bool>.Success(true);
+            return Result<Category>.Success(exist);
         }
     }
 }
