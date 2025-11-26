@@ -47,9 +47,8 @@ namespace NewsAI.Data.Repositories
 
         public async Task<bool> FindName (string categoryName, CancellationToken cancellationToken = default)
         {
-            var exist = await _context.Categories.FindAsync(categoryName);
+            return await _context.Categories.AnyAsync(c => c.Name == categoryName, cancellationToken);
 
-           return exist == null;
         }
     }
 }
