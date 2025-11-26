@@ -52,7 +52,7 @@ namespace NewsAI.Data.Services
         {
             var nameExist = await _categoryRepository.FindName(category.Name);
 
-            if (!nameExist) return Result<Guid>.Conflict("Name already exist");
+            if (nameExist) return Result<Guid>.Conflict("Name already exist");
 
             var validateCategory = _createCategoryValidator.Validate(category);
 
@@ -75,7 +75,7 @@ namespace NewsAI.Data.Services
             {
                 var nameExist = await _categoryRepository.FindName(category.Name);
 
-                if (!nameExist) return Result<bool>.Conflict("Name already exist");
+                if (nameExist) return Result<bool>.Conflict("Name already exist");
             }
 
             var validateCategory = _updateCategoryValidator.Validate(category);
