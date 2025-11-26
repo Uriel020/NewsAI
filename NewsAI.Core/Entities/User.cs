@@ -18,7 +18,7 @@ public class User
     
     public DateTime DateOfBirth { get; set; }
     
-    public bool IsActive { get; set; }
+    public bool IsActive { get; set; } = true;
     
     public DateTime CreatedAt { get; set; }
     

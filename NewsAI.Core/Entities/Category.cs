@@ -12,7 +12,7 @@ public class Category
 
     public DateTime UpdatedAt { get; set; }
     
-    public bool IsActive { get; set; }
+    public bool IsActive { get; set; } = true;
 
     public virtual ICollection<News> News { get; set; } = new List<News>();
 }
