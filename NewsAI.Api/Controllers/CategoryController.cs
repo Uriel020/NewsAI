@@ -48,7 +48,12 @@ namespace NewsAI.Api.Controllers
                 };
             }
 
-            return Created(newCategory.Value);
+            return CreatedAtAction(
+                nameof(GetCategoryById), 
+                new {id = newCategory.Value}, 
+                newCategory.Value
+            );
+
         }
 
         [HttpPut("{id:guid}")]
