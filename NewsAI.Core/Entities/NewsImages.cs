@@ -6,7 +6,7 @@ public class NewsImages
 
     public string Url { get; set; } = null!;
 
-    public bool IsPrimary { get; set; } = false;
+    public bool IsPrimary { get; set; }
     
     public Guid NewsId { get; set; }
 

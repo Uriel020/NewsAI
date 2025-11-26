@@ -12,7 +12,7 @@ public class News
 
     public int Views { get; set; }
 
-    public bool HotNews { get; set; } = false;
+    public bool HotNews { get; set; }
 
     public DateTime CreatedAt { get; set; }
     
