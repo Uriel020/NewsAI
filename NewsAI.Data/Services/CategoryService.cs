@@ -82,9 +82,11 @@ namespace NewsAI.Data.Services
 
             if (!validateCategory.IsValid) return Result<bool>.BadRequest(validateCategory.Errors);
 
-            var mapCategory = _categoryMapper.Map<Category>(category);
+            var oldCategory = (await _categoryRepository.GetByIdAsync(id))!;
 
-            await _categoryRepository.UpdateAsync(mapCategory);
+            _categoryMapper.Map(category, oldCategory);
+
+            await _categoryRepository.UpdateAsync(oldCategory);
 
             return Result<bool>.Success(true);
 

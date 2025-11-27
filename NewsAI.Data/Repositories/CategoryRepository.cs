@@ -32,7 +32,6 @@ namespace NewsAI.Data.Repositories
 
         public async Task<bool> UpdateAsync(Category entity, CancellationToken cancellationToken = default)
         {
-            _context.Categories.Update(entity);
             return await _context.SaveChangesAsync(cancellationToken) > 0;
         }
 
