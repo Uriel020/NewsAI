@@ -40,11 +40,21 @@ namespace NewsAI.Api.Controllers
 
             var newNews = await _newsService.Create(news);
 
-            if (newNews.Error != null) return BadRequest(newNews.Error);
+            if(newNews.HttpErrorType != HttpErrorType.None)
+            {
+                return newNews.HttpErrorType switch
+                {
+                    HttpErrorType.BadRequest => BadRequest(newNews.Errors),
+                    HttpErrorType.Conflict => Conflict(newNews.Error),
+                    _ => StatusCode(500, "An unexpected error occurred")
+                };
+            }
 
-            if (newNews.Errors != null) return BadRequest(newNews.Errors);
-
-            return Created();
+            return CreatedAtAction(
+                nameof(GetNewById), 
+                new {id = newNews.Value}, 
+                newNews.Value
+            );
         }
 
         [HttpPut("{id:guid}")]
