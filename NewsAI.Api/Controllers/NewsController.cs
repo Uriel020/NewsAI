@@ -64,9 +64,18 @@ namespace NewsAI.Api.Controllers
 
             var updatedNews = await _newsService.Update(id, news);
 
-            if (updatedNews.Errors != null) return BadRequest(updatedNews.Errors);
+            if (updatedNews.HttpErrorType != HttpErrorType.None)
+            {
+                return updatedNews.HttpErrorType switch
+                {
+                    HttpErrorType.NotFound => NotFound(updatedNews.Error),
+                    HttpErrorType.BadRequest => BadRequest(updatedNews.Errors),
+                    HttpErrorType.Conflict => Conflict(updatedNews.Error),
 
-            return Ok(news);
+                    _ => StatusCode(500, "An unexpected error occurred")
+                };
+            }
+            return Accepted();
         }
 
         [HttpDelete("{id:guid}")]
