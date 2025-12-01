@@ -67,6 +67,7 @@ namespace NewsAI.Data.Services
 
         public async Task<Result<bool>> Update(Guid id, UpdateCategoryDto category)
         {
+            
             var exist = await ValidateExist(id);
 
             if(!exist.IsSuccess) return Result<bool>.NotFound(exist.Error);

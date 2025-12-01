@@ -36,6 +36,8 @@ namespace NewsAI.Api.Controllers
 
         public async Task<ActionResult<Guid>> CreateCategory (CreateCategoryDto category)
         {
+            if (!ModelState.IsValid) return BadRequest(ModelState);
+
             var newCategory = await _categoryService.Create(category);
 
             if(newCategory.HttpErrorType != HttpErrorType.None)
@@ -60,6 +62,8 @@ namespace NewsAI.Api.Controllers
 
         public async Task<IActionResult> UpdateCategory(Guid id, UpdateCategoryDto category)
         {
+            if (!ModelState.IsValid) return BadRequest(ModelState);
+
             var updateCategory = await _categoryService.Update(id, category);
 
             if (updateCategory.HttpErrorType != HttpErrorType.None)
