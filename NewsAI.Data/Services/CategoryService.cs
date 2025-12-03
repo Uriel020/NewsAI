@@ -99,7 +99,7 @@ namespace NewsAI.Data.Services
 
             if(!exist.IsSuccess) return Result<bool>.NotFound(exist.Error);
 
-            await _categoryRepository.DeleteAsync(id);
+            await _categoryRepository.DeleteAsync(exist.Value.Id);
 
             return Result<bool>.Success(true);
         }

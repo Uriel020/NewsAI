@@ -37,10 +37,8 @@ namespace NewsAI.Data.Repositories
 
         public async Task<bool> DeleteAsync(Guid id, CancellationToken cancellationToken = default)
         {
-            var category = new Category { Id = id };
-            _context.Categories.Attach(category);
-            _context.Categories.Remove(category);
-
+            var category = await _context.Categories.FindAsync(id);
+            _context.Categories.Remove(category!);
             return await _context.SaveChangesAsync(cancellationToken) > 0;
         }
 
