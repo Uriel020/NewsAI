@@ -39,9 +39,8 @@ public class NewsRepository : INewsRepository
 
     public async Task<bool> DeleteAsync(Guid id, CancellationToken cancellationToken = default)
     {
-        var news = new News { Id = id };
-        _context.News.Attach(news);
-        _context.News.Remove(news);
+        var news = await _context.News.FindAsync(id);
+        _context.News.Remove(news!);
 
         return await _context.SaveChangesAsync(cancellationToken) > 0;
     }
