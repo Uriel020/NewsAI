@@ -92,9 +92,9 @@ public class NewsService : INewsService
 
     public async Task<Result<bool>> Delete(Guid id)
     {
-        await ValidateExist(id);
+        var exist = await ValidateExist(id);
 
-        await _newsRepository.DeleteAsync(id);
+        if (!exist.IsSuccess) return Result<bool>.NotFound(exist.Error!);
 
         return Result<bool>.Success(true);
     }

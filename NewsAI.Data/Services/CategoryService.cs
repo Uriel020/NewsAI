@@ -97,7 +97,7 @@ namespace NewsAI.Data.Services
         {
             var exist = await ValidateExist(id);
 
-            if(!exist.IsSuccess) return Result<bool>.NotFound(exist.Error);
+            if(!exist.IsSuccess) return Result<bool>.NotFound(exist.Error!);
 
             await _categoryRepository.DeleteAsync(exist.Value.Id);
 
