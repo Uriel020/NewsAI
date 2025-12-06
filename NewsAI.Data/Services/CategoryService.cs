@@ -41,7 +41,7 @@ namespace NewsAI.Data.Services
         {
             var exist = await ValidateExist(id);
 
-            if(!exist.IsSuccess) return Result<CategoryDto>.NotFound(exist.Error);
+            if(!exist.IsSuccess) return Result<CategoryDto>.NotFound(exist.Error!)!;
 
             var mapCategory = _categoryMapper.Map<CategoryDto>(exist.Value);
 
@@ -70,7 +70,7 @@ namespace NewsAI.Data.Services
             
             var exist = await ValidateExist(id);
 
-            if(!exist.IsSuccess) return Result<bool>.NotFound(exist.Error);
+            if(!exist.IsSuccess) return Result<bool>.NotFound(exist.Error!);
 
             if (category.Name != null)
             {
