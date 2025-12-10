@@ -96,6 +96,8 @@ public class NewsService : INewsService
 
         if (!exist.IsSuccess) return Result<bool>.NotFound(exist.Error!);
 
+        await _newsRepository.DeleteAsync(exist.Value.Id);
+
         return Result<bool>.Success(true);
     }
 

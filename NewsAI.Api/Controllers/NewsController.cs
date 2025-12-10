@@ -83,11 +83,7 @@ namespace NewsAI.Api.Controllers
         {
             var deletedNews = await _newsService.Delete(id);
 
-            if (deletedNews.Error != null)
-            {
-                return NotFound(deletedNews.Error);
-            }
-            return NoContent();
+            return deletedNews.HttpErrorType == HttpErrorType.NotFound ? NotFound(deletedNews.Error) : Accepted();
         }
     }
 }

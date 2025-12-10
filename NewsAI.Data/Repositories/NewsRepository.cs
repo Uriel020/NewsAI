@@ -41,7 +41,6 @@ public class NewsRepository : INewsRepository
     {
         var news = await _context.News.FindAsync(id);
         _context.News.Remove(news!);
-
         return await _context.SaveChangesAsync(cancellationToken) > 0;
     }
 
