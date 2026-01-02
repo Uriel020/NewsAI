@@ -3,7 +3,7 @@ using NewsAI.Core.Models.Auth.DTOs;
 
 namespace NewsAI.Infrastructure.Services
 {
-    public interface IAuthService: ICommonService<User, CreateUserDto, >
+    public interface IAuthService: ICommonService<User, UserDto, CreateUserDto, UpdateUserDto>
     {
         
     }
