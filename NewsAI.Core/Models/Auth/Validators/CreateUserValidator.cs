@@ -9,29 +9,28 @@ public class CreateUserValidator : AbstractValidator<CreateUserDto>
     {
         RuleFor(x => x.FirstName)
             .NotEmpty().WithMessage("First name is required")
-            .MaximumLength(20).WithMessage("First name must be not exceed 20 characters");
+            .MaximumLength(20).WithMessage("First name must not exceed 20 characters");
 
         RuleFor(x => x.LastName)
             .NotEmpty().WithMessage("Last name is required")
-            .MaximumLength(20).WithMessage("Last name must be not exceed 20 characters");
+            .MaximumLength(20).WithMessage("Last name must not exceed 20 characters");
 
         RuleFor(x => x.EmailAddress)
             .NotEmpty().WithMessage("Email is required")
             .EmailAddress().WithMessage("Invalid email address");
+
+        RuleFor(x => x.Password)
+            .NotEmpty().WithMessage("Password is required")
+            .MinimumLength(12).WithMessage("Password must be at least 12 characters long");
+
+        RuleFor(x => x.CardNumber)
+            .NotEmpty().WithMessage("Card number is required");
+
+        RuleFor(x => x.PhoneNumber)
+            .NotEmpty().WithMessage("Phone number is required");
+        
+        RuleFor(x => x.DateOfBirth)
+            .NotEmpty().WithMessage("Date of birth is required")
+            .LessThan(DateTime.Today).WithMessage("Date of birth must be in the past");
     }
 }
-
-
-//   public string FirstName { get; set; } = null!;
-
-//     public string LastName { get; set; } = null!;
-
-//     public string? EmailAddress { get; set; }
-
-//     public string Password { get; set; } = null!;
-
-//     public int CardNumber { get; set; }
-
-//     public int PhoneNumber { get; set; }
-
-//     public DateTime DateOfBirth { get; set; }
